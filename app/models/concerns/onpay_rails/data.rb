@@ -22,12 +22,12 @@ module OnpayRails::Data
     include OnpayRails::Check
     include OnpayRails::Pay
 
-    def payment_link
+    def make_payment_link
       url = "https://secure.onpay.ru/pay/make_payment_link"
       keys = [:pay_amount, :pay_for, :one_way, :ticker, :user_login, :user_email, :price_final, :pay_type, :notify_by_api, :md5]
       pay_amount = self.total
       pay_for = self.onpay_pay_for
-      one_way = self.onpay_way
+      one_way = nil # self.onpay_way
       ticker = self.onpay_way
       user_login = OnpayRails.config.user_login
       price_final = "0"
@@ -46,8 +46,10 @@ module OnpayRails::Data
         notify_by_api: notify_by_api,
         api_in_key: api_in_key,
         md5: md5
+      }.select { |k,v|
+        !v.blank?
       }
-      return URI.join(url, "?", _params.to_param)
+      return "#{url}?#{_params.to_query}"
     end
 
     def success_url
@@ -71,7 +73,7 @@ module OnpayRails::Data
       note = ""
       ln = "ru"
       f = "7"
-      one_way = self.onpay_way
+      one_way = nil # self.onpay_way
       price_final = "true"
       md5 = Digest::MD5.hexdigest [pay_mode, price, ticker, pay_for, convert, onpay_secret_key].join(";")
 
@@ -91,8 +93,10 @@ module OnpayRails::Data
         one_way: one_way,
         price_final: price_final,
         md5: md5
+      }.select { |k,v|
+        !v.blank?
       }
-      return URI.join(url, "?", _params.to_param)
+      return "#{url}?#{_params.to_query}"
 
     end
 
