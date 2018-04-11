@@ -81,7 +81,7 @@ class OnpayRails::BaseController < ApplicationController
 
 	def api
 
-    case params["type"].to_sym do
+    case params["type"].to_sym
     when :check
       @order.send(OnpayRails.config.check_method, check_params)
       render json: @order.onpay_check_response_json
