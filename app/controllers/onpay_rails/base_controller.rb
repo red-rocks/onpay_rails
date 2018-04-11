@@ -1,7 +1,7 @@
 #encoding: utf-8
 class OnpayRails::BaseController < ApplicationController
-  skip_before_filter :verify_authenticity_token, :only => [:api]
-  before_filter :load_order,                     :only => [:api]
+  skip_before_action :verify_authenticity_token, :only => [:api]
+  before_action :load_order,                     :only => [:api]
   # ssl_required :index
 
   def order_class
@@ -79,8 +79,8 @@ class OnpayRails::BaseController < ApplicationController
       additional_params: [])
   end
 
-	def api
 
+	def api
     case params["type"].to_sym
     when :check
       @order.send(OnpayRails.config.check_method, check_params)
