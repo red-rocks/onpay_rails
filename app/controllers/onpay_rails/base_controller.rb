@@ -94,71 +94,72 @@ class OnpayRails::BaseController < ApplicationController
     else
       render json: {}
     end
+  end
 
 
 
-		if params["type"] == "check" then
-      check
-			if params["md5"] == Digest::MD5.hexdigest([params["type"],
-																												params["pay_for"],
-																												params["order_amount"],
-																												params["order_currency"],
-																												@gateway.options[:priv_code]].join(';')).upcase
-				if @gateway.options[:test_mode] then
-					tst_valid_check(params["pay_for"],params["order_amount"],params["order_currency"]) ? out_code_comment(0,"All,OK") :	out_code_comment(3,"Error on parameters check")
-				else
-					valid_check(params["pay_for"],params["order_amount"],params["order_currency"]) ? out_code_comment(0,"All,OK") :	out_code_comment(3,"Error on parameters check")
-				end
-				@out["md5"] = create_check_md5(params["type"],params["pay_for"],params["order_amount"],
-																		 params["order_currency"],@out["code"],@gateway.options[:priv_code])
-				render :action => "check"
-			else
-				out_code_comment(7,"MD5 signature wrong")
-				@out["md5"] = create_check_md5(params["type"],params["pay_for"],params["order_amount"],
-																		 params["order_currency"],@out["code"],@gateway.options[:priv_code])
-				render :action => "check"
-			end
-		end
-
-
-		if params["type"] == "pay" then
-			if params["md5"] == Digest::MD5.hexdigest([params["type"],
-																											params["pay_for"],
-																											params["onpay_id"],
-																											params["order_amount"],
-																											params["order_currency"],
-																											@gateway.options[:priv_code]].join(';')).upcase
-				@out["onpay_id"] = params["onpay_id"]
-				if @gateway.options[:test_mode] then
-					if tst_valid_check(params["pay_for"],params["order_amount"],params["order_currency"]) then
-						create_payment(params["order_amount"].to_f)
-						out_code_comment(0,"OK")
-					else
-						out_code_comment(3,"Error on parameters check")
-					end
-				else
-					if valid_check(params["pay_for"],params["order_amount"],params["order_currency"]) then
-						create_payment(params["order_amount"].to_f)
-						out_code_comment(0,"OK")
-					else
-						out_code_comment(3,"Error on parameters check")
-					end
-				end
-
-
-				@out["md5"] = create_pay_md5(params["type"],params["pay_for"],params["onpay_id"],params["pay_for"],params["order_amount"],
-																		params["order_currency"],@out["code"],@gateway.options[:priv_code])
-				render :action => "pay"
-			else
-				out_code_comment(7,"MD5 signature wrong")
-				@out["onpay_id"] = params["onpay_id"]
-				@out["md5"] = create_pay_md5(params["type"],params["pay_for"],params["onpay_id"],params["pay_for"],params["order_amount"],
-																	 params["order_currency"],@out["code"],@gateway.options[:priv_code])
-				render :action => "pay"
-			end
-		end
-
-	end
+	# 	if params["type"] == "check" then
+  #     check
+	# 		if params["md5"] == Digest::MD5.hexdigest([params["type"],
+	# 																											params["pay_for"],
+	# 																											params["order_amount"],
+	# 																											params["order_currency"],
+	# 																											@gateway.options[:priv_code]].join(';')).upcase
+	# 			if @gateway.options[:test_mode] then
+	# 				tst_valid_check(params["pay_for"],params["order_amount"],params["order_currency"]) ? out_code_comment(0,"All,OK") :	out_code_comment(3,"Error on parameters check")
+	# 			else
+	# 				valid_check(params["pay_for"],params["order_amount"],params["order_currency"]) ? out_code_comment(0,"All,OK") :	out_code_comment(3,"Error on parameters check")
+	# 			end
+	# 			@out["md5"] = create_check_md5(params["type"],params["pay_for"],params["order_amount"],
+	# 																	 params["order_currency"],@out["code"],@gateway.options[:priv_code])
+	# 			render :action => "check"
+	# 		else
+	# 			out_code_comment(7,"MD5 signature wrong")
+	# 			@out["md5"] = create_check_md5(params["type"],params["pay_for"],params["order_amount"],
+	# 																	 params["order_currency"],@out["code"],@gateway.options[:priv_code])
+	# 			render :action => "check"
+	# 		end
+	# 	end
+  #
+  #
+	# 	if params["type"] == "pay" then
+	# 		if params["md5"] == Digest::MD5.hexdigest([params["type"],
+	# 																										params["pay_for"],
+	# 																										params["onpay_id"],
+	# 																										params["order_amount"],
+	# 																										params["order_currency"],
+	# 																										@gateway.options[:priv_code]].join(';')).upcase
+	# 			@out["onpay_id"] = params["onpay_id"]
+	# 			if @gateway.options[:test_mode] then
+	# 				if tst_valid_check(params["pay_for"],params["order_amount"],params["order_currency"]) then
+	# 					create_payment(params["order_amount"].to_f)
+	# 					out_code_comment(0,"OK")
+	# 				else
+	# 					out_code_comment(3,"Error on parameters check")
+	# 				end
+	# 			else
+	# 				if valid_check(params["pay_for"],params["order_amount"],params["order_currency"]) then
+	# 					create_payment(params["order_amount"].to_f)
+	# 					out_code_comment(0,"OK")
+	# 				else
+	# 					out_code_comment(3,"Error on parameters check")
+	# 				end
+	# 			end
+  #
+  #
+	# 			@out["md5"] = create_pay_md5(params["type"],params["pay_for"],params["onpay_id"],params["pay_for"],params["order_amount"],
+	# 																	params["order_currency"],@out["code"],@gateway.options[:priv_code])
+	# 			render :action => "pay"
+	# 		else
+	# 			out_code_comment(7,"MD5 signature wrong")
+	# 			@out["onpay_id"] = params["onpay_id"]
+	# 			@out["md5"] = create_pay_md5(params["type"],params["pay_for"],params["onpay_id"],params["pay_for"],params["order_amount"],
+	# 																 params["order_currency"],@out["code"],@gateway.options[:priv_code])
+	# 			render :action => "pay"
+	# 		end
+	# 	end
+  #
+	# end
 
 
 
