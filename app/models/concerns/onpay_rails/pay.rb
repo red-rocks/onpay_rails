@@ -2,11 +2,6 @@ module OnpayRails::Pay
   extend ActiveSupport::Concern
 
   included do
-
-    # pay;pay_for;payment.amount;payment.way;balance.amount;balance.way;secret_key
-    def onpay_pay_request_signature
-      Digest::SHA1.hexdigest ["pay", onpay_pay_for, onpay_amount, onpay_way, onpay_balance_amount, onpay_balance_way, onpay_secret_key].join(";")
-    end
     # pay;status;pay_for;secret_key
     def onpay_pay_response_signature
       Digest::SHA1.hexdigest ["pay", onpay_status, onpay_pay_for, onpay_secret_key].join(";")
@@ -19,6 +14,10 @@ module OnpayRails::Pay
       }
     end
 
+    def onpay_set_paid(_params = {})
+      check(_params)
+    end
+
     def onpay_set_paid!(_params = {})
       check(_params)
     end
@@ -28,6 +27,23 @@ module OnpayRails::Pay
     end
 
 
+  end
+
+  class_methods do
+    # pay;pay_for;payment.amount;payment.way;balance.amount;balance.way;secret_key
+    def onpay_pay_request_signature(_params = {})
+      Digest::SHA1.hexdigest(
+        [
+          "pay",
+          _params[:pay_for],
+          (_params[:payment] && _params[:balance][:amount]),
+          (_params[:payment] && _params[:balance][:way]),
+          (_params[:balance] && _params[:balance][:amount]),
+          (_params[:balance] && _params[:balance][:way]),
+          onpay_secret_key
+        ].join(";")
+      )
+    end
   end
 
 end

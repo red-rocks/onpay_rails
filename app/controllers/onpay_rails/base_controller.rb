@@ -22,7 +22,7 @@ class OnpayRails::BaseController < ApplicationController
   # signature	string	Контрольная подпись, SHA1 от строки - «check;pay_for;amount;way;mode;secret_key»
   # additional_params.onpay_ap_xxx	string	Дополнительные параметры, переданные в платежной ссылке(см документацию по платежным ссылкам). Данных параметров в запросе НЕ будет, если они не были переданы в платежной ссылке. Алгоритм их формирования смотрите ниже
   def check_params
-    params.permit(:pay_for, :amount, :way, :mode, :user_email, :signature, additional_params: [])
+    params.permit(:type, :pay_for, :amount, :way, :mode, :user_email, :signature, additional_params: [])
   end
 
   # type	string	Тип запроса (pay)
@@ -45,7 +45,7 @@ class OnpayRails::BaseController < ApplicationController
   # order.to_way	string	Валюта из ордера, в которой должен был пополниться баланс магазина
   # additional_params.onpay_ap_xxx
   def pay_params
-    params.permit(:pay_for, :signature,
+    params.permit(:type, :pay_for, :signature,
       user: [:email, :phone, :note],
       payment: [:id, :date_time, :amount, :way, :rate, :release_at],
       balance: [:amount, :way],
@@ -67,7 +67,7 @@ class OnpayRails::BaseController < ApplicationController
         else
           render json: @order.onpay_pay_response_json
         end
-        
+
       else
         render json: {}
       end
