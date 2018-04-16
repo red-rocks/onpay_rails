@@ -22,23 +22,23 @@ module OnpayRails::Check
     def update_onpay_check_attributes(_params = {})
       keys = [:user_email, :amount, :amount, :way]
       keys.each do |k|
-        self.send("onpay_#{k}||=", _params[k])
+        self.send("onpay_#{k}=", _params[k]) if self.send("onpay_#{k}").nil?
       end
       self
     end
 
     def onpay_check(_params = {})
       ret = true
-      self.update_onpay_check_attributes(_params)
+      # self.update_onpay_check_attributes(_params)
       ret &&= _params[:user_email] == onpay_user_email
       ret &&= _params[:pay_for] == onpay_pay_for
       ret &&= _params[:amount] == onpay_amount
       ret &&= _params[:way] == onpay_way
-      return true
+      return ret
     end
 
     def check(_params = {})
-      return onpay_check
+      return onpay_check(_params)
     end
 
   end

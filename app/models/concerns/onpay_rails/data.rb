@@ -9,7 +9,7 @@ module OnpayRails::Data
       id.to_s
     end
     def onpay_status
-      !new_record?
+      onpay_check #!new_record?
     end
 
     def self.onpay_secret_key

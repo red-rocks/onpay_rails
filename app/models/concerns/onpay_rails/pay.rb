@@ -20,11 +20,11 @@ module OnpayRails::Pay
     end
 
     def onpay_set_paid!(_params = {})
-      return false
+      check(_params)
     end
 
     def set_paid!(_params = {})
-      return onpay_set_paid!
+      return onpay_set_paid!(pay_params)
     end
 
 
