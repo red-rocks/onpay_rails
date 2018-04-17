@@ -12,6 +12,8 @@ module OnpayRails::Fields
       field :onpay_balance_amount, type: Float
       field :onpay_balance_way
 
+      field :onpay_pay_params, type: Hash
+
       if defined?(RailsAdmin) and respond_to?(:rails_admin)
         rails_admin do
 
@@ -32,6 +34,10 @@ module OnpayRails::Fields
               read_only true
             end
             field :onpay_balance_way, :string do
+              read_only true
+            end
+
+            field :onpay_pay_params, :json do
               read_only true
             end
           end # group :onpay do

@@ -15,11 +15,11 @@ module OnpayRails::Pay
     end
 
     def onpay_set_paid(_params = {})
-      check(_params)
+      check(_params) and self.onpay_pay_params = _params
     end
 
     def onpay_set_paid!(_params = {})
-      check(_params)
+      check(_params) and self.onpay_pay_params = _params 
     end
 
     def set_paid!(_params = {})
