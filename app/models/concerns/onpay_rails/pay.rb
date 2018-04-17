@@ -16,15 +16,14 @@ module OnpayRails::Pay
 
     def onpay_set_paid(_params = {})
       if self.check_paid(_params)
-        self.onpay_pay_params = _params
+        self.onpay_pay_params = _params.to_h
         return true
       end
       return false
     end
 
     def onpay_set_paid!(_params = {})
-      if self.check_paid(_params)
-        self.onpay_pay_params = _params
+      if self.onpay_set_paid(_params)
         if self.save
           return true
         end
