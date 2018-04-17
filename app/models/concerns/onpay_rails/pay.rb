@@ -25,7 +25,9 @@ module OnpayRails::Pay
     def onpay_set_paid!(_params = {})
       if self.check(_params)
         self.onpay_pay_params = _params
-        return true
+        if self.save
+          return true
+        end
       end
       return false
     end
