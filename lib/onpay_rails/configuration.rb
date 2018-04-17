@@ -31,7 +31,7 @@ module OnpayRails
       @order_class = ::Order if defined?(::Order)
       @use_routes = true
 
-      @check_method = :check
+      @check_method = :check_paid
       @paid_method = :set_paid!
       @log_fail_method = :log_fail
 

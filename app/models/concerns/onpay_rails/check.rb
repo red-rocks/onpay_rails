@@ -23,7 +23,7 @@ module OnpayRails::Check
       self
     end
 
-    def onpay_check(_params = {})
+    def onpay_check_paid(_params = {})
       return @onpay_status unless @onpay_status.nil?
       ret = true
       # self.update_onpay_check_attributes(_params)
@@ -36,8 +36,8 @@ module OnpayRails::Check
       return @onpay_status = ret
     end
 
-    def check(_params = {})
-      return self.onpay_check(_params)
+    def check_paid(_params = {})
+      return self.onpay_check_paid(_params)
     end
 
   end
