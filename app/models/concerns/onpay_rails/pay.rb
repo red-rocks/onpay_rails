@@ -14,9 +14,15 @@ module OnpayRails::Pay
       }
     end
 
+
     def onpay_set_paid(_params = {})
       if self.check_paid(_params)
-        self.onpay_pay_params = _params.to_h
+        begin # WTF
+          self.onpay_pay_params = _params.to_h
+        rescue Exception => ex
+          logger.info ex.message
+          logger.info ex.backtrace
+        end
         return true
       end
       return false
