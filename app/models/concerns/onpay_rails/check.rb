@@ -37,7 +37,7 @@ module OnpayRails::Check
     end
 
     def check(_params = {})
-      return onpay_check(_params)
+      return self.onpay_check(_params)
     end
 
   end
